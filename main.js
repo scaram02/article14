@@ -1,6 +1,6 @@
 const game = new Game();
-let mode;
-let blankUrls = ["assets/sex-lite.png","assets/race-lite.png","assets/color-lite.png","assets/language-lite.jpg","assets/religion-lite.png","assets/minority-lite.jpg", "assets/birth-lite.png"]
+let mode = "instructions"
+let blankUrls = ["assets/sex-lite.png","assets/race-lite.png","assets/color-lite.png","assets/language-lite.png","assets/religion-lite.png","assets/minority-lite.jpg", "assets/birth-lite.png"]
 let blanks = []
 
 
@@ -9,7 +9,7 @@ function preload() {
   //shing = loadSound("assets/shing2.wav")
 
 }
-// (set up) blank icons
+// (set up) blank icons for trophy case
 function renderBlanks(){
   for (var i = 0; i < 7; i++){
     blanks[i] = loadImage(blankUrls[i]);
@@ -24,7 +24,7 @@ function setup() {
   gameCanvas.parent("gameCanvas");
   game.floor = 700;
   game.setup();
-  mode = 2;
+  mode = "instructions";
   // textSize(32);
   // fill("darkgreen");
    startScr = loadImage("assets/map.png");
@@ -63,18 +63,35 @@ function draw() {
   //   fill('brown');
   //   text("Press SPACE to start!", 357, 370);
   // }
-  // if (mode === 1) {
-  //   background("lightblue");
-  //   text("Press SPACE to play!", 365, 680);
-  //   push()
-  //   fill("navy")
-  //   text("Press SPACE to: ", 100, 100, 400)
-  //   pop()
-  // }
+  if (mode === "instructions") {
+    background("lightblue");
+    text("Press SPACE to start!", 365, 680);
+    push()
+    fill("navy")
+    text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sapien est, vulputate egestas laoreet tempus, placerat eget sapien. Curabitur ac mauris sit amet mauris auctor fermentum. Mauris ornare in ex eget aliquam. Etiam cursus nunc vel odio feugiat lacinia. Fusce semper sagittis consectetur. Maecenas varius faucibus sapien eu aliquet. Aenean vitae felis nec nisl luctus dapibus id at metus. Mauris et metus eu lectus vestibulum pellentesque non vitae eros. Phasellus ut dolor nulla. Curabitur facilisis elit id aliquet ullamcorper. Morbi ut leo a nisl feugiat bibendum. Aliquam in sem vehicula, eleifend sem sit amet, tristique ante. Phasellus sed sapien pretium. ", 200, 100, 700)
+    pop()
+  }
+  if (mode === "levelUp"){
+    // need to undraw the game though I think
+    background("lightblue");
+    text("New level reached: " + level, 365, 680);
+   
+  }
+ 
+  function keyPressed(){
+    if ((mode == "instructions" || "levelUp") && keyCode === 32){
+      mode = "game"
+    }}
+    keyPressed()
 
-  // if (mode === 2) {
+
+  if (mode === "game") {
     game.draw();
-  // }
+   if (game.rightsCollection.length == 7){
+     game.resetLevel()
+     mode = "levelUp"
+   }
+  }
 
   // to do: rewrite as switch statement
   if (keyIsDown(RIGHT_ARROW)){
@@ -95,7 +112,9 @@ function draw() {
 
     }
 
-}
+
+  
+} // end draw
 
 
 

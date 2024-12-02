@@ -2,7 +2,7 @@ let rights = [
     { name: "sex", imgURL: "assets/sex.png" },
     { name: "race",  imgURL: "assets/race.png", },
     { name: "color",  imgURL: "assets/color.png",},
-    { name: "language",  imgURL: "assets/language.jpg", },
+    { name: "language",  imgURL: "assets/language.png", },
     { name: "religion",  imgURL: "assets/religion.png", },
     // { name: "politicalOpinion",  imgURL: "politicalOpinion.jpg" },
     { name: "minority", imgURL: "assets/minority.jpg" },

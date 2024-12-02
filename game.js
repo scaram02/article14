@@ -1,4 +1,5 @@
 let score = 0;
+let level = 3
 // let crashed = 0
 // let gameEnd = false;
 // let shing;
@@ -12,16 +13,18 @@ class Game {
     this.background = new Background();
     this.player = new Player();
     this.rights = new Rights();
+    this.provision = new Provision()
     this.rightsInAction = [];
     this.rightsCollection = [];
     this.rightsUrls = []
     this.indexForURLs = 0
     this.urlsOnly = []
-    // this.ind = this.urlsOnly.length && this.urlsOnly.length -1 
-    // this.sideToRender = this.urlsOnly.length > 0 && this.urlsOnly.filter((u) => this.urlsOnly.indexOf(u) == this.urlsOnly.lastIndexOf(u))[this.ind]
-    this.iconUrls = ["assets/sex.png","assets/race.png","assets/color.png","assets/language.jpg","assets/religion.png","assets/minority.jpg", "assets/birth.png"]
+    this.iconUrls = ["assets/sex.png","assets/race.png","assets/color.png","assets/language.png","assets/religion.png","assets/minority.jpg", "assets/birth.png"]
    this.icons = []
    this.iconIndex = 0
+   this.provisions = []
+    this.case = new Case()
+    this.cases = []
     
     // this.shopper = new Shopper();
     // this.shoppers = []
@@ -36,7 +39,7 @@ class Game {
   preload() {
     this.background.preload();
     this.player.preload();
-   
+   this.provision.preload()
    
 
     // this.icon = loadImage("assets/color.png")
@@ -45,16 +48,23 @@ class Game {
   }
 
 
-
+// ~~~~~~~~ SETUP ~~~~~~~~~~~~~
   setup() {
     this.player.setup();
+    this.provision.setup()
+
 
     for (var i = 0; i < 7; i++){
       this.icons[i] = loadImage(this.iconUrls[i]);
       // console.log(this.iconUrls[i])
     }
 
-  }
+// this.provision.draw()
+}
+// ~~~~~~~~ END SETUP ~~~~~~~~~~~~~
+
+
+
  
 // rights collision
 isRightsCollision(rights, player) {
@@ -72,35 +82,44 @@ isRightsCollision(rights, player) {
 }
 
 
-// isShopperCollision(shopper, player) {
-//   if (player.x + player.width < shopper.x || shopper.x + shopper.width < player.x){
-//     return false
-//   }
-//   if (player.y > shopper.y + shopper.height ||
-//     shopper.y > player.y + player.height
-//   ) {
-//   return false;
-//   }
-//   return true;
-// }
+
+
+
+
+isProvisionCollision(provision, player) {
+  if (player.x + player.width < provision.x || provision.x + provision.width < player.x){
+    return false
+  }
+  if (player.y > provision.y + provision.height ||
+    provision.y > player.y + player.height
+  ) {
+  return false;
+  }
+  return true;
+}
 
 
 changeIcon(){
   this.iconIndex = this.iconUrls.indexOf(iconInCollection) || 0
-  console.log("INDEX   ,", this.iconIndex)
 }
 
+
+
+// ~~~~~~~~~~~~~~DRAW~~~~~~~~~~~~~~~~~~~~
   draw() {
     this.background.draw();
     this.player.draw();
- 
-function renderScore(){
+    this.provision.draw()
+    function renderScore(){
 push();
 noStroke();
 // rect(15, 15, 200, 50, 10);
 // pop();
 text("Score: " + score, 30, 50);
-// pop()
+text("Level: " + level, 30, 70);
+let bestScore = "Best score: " + localStorage.getItem("bestScore")
+text(bestScore, 30, 90)
+pop()
 }
 renderScore()
 
@@ -117,9 +136,7 @@ function renderCollection(){
   renderCollection()
 
 
-
 // // A Wild Right appears!
-// to do: figure out of this logic makes sense or should control for rightsCollection
 if (frameCount % 60 === 0) {
   this.rightsInAction.push(new Rights());
 }
@@ -151,8 +168,6 @@ if (this.isRightsCollision(rights, this.player)){
   if (this.rightsCollection.length == 0){
     this.rightsCollection.push(rights.randomRight)
     this.rightsUrls.push(rights.randomRight)
-    // iconInCollection = rights.randomRight.imgURL;
-    // this.changeIcon()
   } else {
       // check here for duplicates in the collection
 let noDuplicates = this.rightsCollection.find((r) => r.name == rights.randomRight.name) == undefined
@@ -180,35 +195,71 @@ image(this.icons[ind], 55, (100 + ( this.iconUrls.indexOf(this.rightsCollection[
 }
 }
 
-
 if (this.isRightsCollision(rights, this.player)){
 score+=5
 // shing.play();
 // console.log(score)
 }
+
+
 })
 
 
-//     // shopper appears!
-//     if (frameCount % 360 === 0){
-//       this.shoppers.push(new Shopper())
-//     }
-//     this.shoppers.forEach(
-//       (shopper, index) => {
-//         if (!shopper.img) shopper.preload();
-//           shopper.draw();
 
-//           // removes shopper when off screen
-//     if (this.shopper.x + this.shopper.width <= 0){
-//   this.shoppers.splice(index, 1)
+  // render provisions not level 1
+  if (level > 1){
+
+    // console.log(isProvisionCollision(this.provision))
+  }
+  
+  
+// console.log(this.provision.provisions)
+// console.log("THIS>DPROVISIO", this.provision.urls)
+
+//           if (this.isProvisionCollision(provision, this.player)){
+//   this.provisions.splice(index, 1);
+//   console.log("IHIST")
 // }
+//       })
 
 
-//     // to end the game
-//     if (this.isShopperCollision(shopper, this.player)) {
-//       crashed++  
-// }
+// ~~~~~~~~CASE LEVEL 3~~~~~~~~~~
+    if (level > 2){
+    if (frameCount > 180 && frameCount % 180 === 0){
+      this.cases.push(new Case())
+    }
+console.log('THIS. CASE', this.cases)
+       // A new case appears! draw new case
+    this.cases.forEach((c, index) => {
+        c.draw();
+   
+        // disappears at bottom of screen
+        if (c.y  >= 650){
+            this.cases.splice(index, 1)
+    }
 
+    function isCaseCollision(c, player){
+      if (player.x + player.width < c.x ||c.x + 200 < player.x){
+        return false;
+      }
+      if (player.y > c.y + 24 || c.y > player.y + player.height){
+        return false
+      }
+      return true;
+    }
+
+// call the funciton
+if (isCaseCollision(c, this.player)){
+  if (c.category === "+"){
+    score +=3
+  } else  {
+    score -=10
+  }
+  this.cases.splice(index, 1)
+}
+  })
+}
+//~~~~~~~~~~~ END CASE~~~~~~~~~
 
 
 
@@ -235,14 +286,41 @@ score+=5
 
 
 
-// if (
-//   !localStorage.getItem("bestScore") ||
-//   localStorage.getItem("bestScore") < score
-// ) {
-//   localStorage.setItem("bestScore", score);
-// }
+if (
+  !localStorage.getItem("bestScore") ||
+  localStorage.getItem("bestScore") < score
+) {
+  localStorage.setItem("bestScore", score);
+}
      } // END draw
-// )
+
+
+
+
+   resetLevel(){
+      // if (this.rightsCollection.length == 7){
+        this.rightsInAction = [];
+        this.rightsCollection = [];
+        this.rightsUrls = []
+        this.indexForURLs = 0
+        this.urlsOnly = []
+        this.icons = []
+        this.iconIndex = 0
+        let iconInCollection = ""
+        this.cases = []
+        level ++
+        this.preload()
+        this.setup()
+        this.draw()
+      // }
+      }
+
+
 
 } // draw
+
+
+  
+  
+  
 
