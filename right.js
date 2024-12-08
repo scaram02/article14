@@ -1,12 +1,14 @@
 let rights = [
-    { name: "sex", imgURL: "assets/sex.png" },
-    { name: "race",  imgURL: "assets/race.png", },
-    { name: "color",  imgURL: "assets/color.png",},
-    { name: "language",  imgURL: "assets/language.png", },
-    { name: "religion",  imgURL: "assets/religion.png", },
-    // { name: "politicalOpinion",  imgURL: "politicalOpinion.jpg" },
-    { name: "minority", imgURL: "assets/minority.jpg" },
-    { name: "birth",  imgURL: "assets/birth.png",}
+    { name: "Sex", imgURL: "assets/sex.png" },
+    { name: "Race",  imgURL: "assets/race.png", },
+    { name: "Color",  imgURL: "assets/color.png",},
+    { name: "Language",  imgURL: "assets/language.png", },
+    { name: "Religion",  imgURL: "assets/religion.png", },
+    { name: "Political Opinion",  imgURL: "assets/politicalOpinion.png" },
+    { name: "Minority", imgURL: "assets/minority.png" },
+    { name: "Nationality",  imgURL: "assets/nationality.png",},
+    { name: "Birth",  imgURL: "assets/birth.png",},
+    { name: "Other",  imgURL: "assets/other.png",}
   ];
 
 class Rights {

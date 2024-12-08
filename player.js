@@ -45,9 +45,9 @@ class Player {
 // to do: optimize us tooooo
 // to do:  make the ifs dynamic
     moveRight(){
-      if (this.x < 850) {
+      if (this.x < 1048) {
         direction = "right"
-        this.x += 2 * this.velocity; 
+        this.x += 1 * this.velocity; 
         this.velocity += 0.02;  
          this.changeDirectionVector()
       }
@@ -56,9 +56,8 @@ class Player {
      moveLeft(){
       if (this.x > 165) {
         direction = "left"
-          this.x -= 2 * this.velocity; 
+          this.x -= 1 * this.velocity; 
           this.velocity += 0.02;   
-          console.log(direction) 
           this.changeDirectionVector()
       }
         }
@@ -66,7 +65,7 @@ class Player {
        moveUp(){
          if (this.y > 0){
           direction = "up"
-            this.y -= 2 * this.velocity; 
+            this.y -= 1 * this.velocity; 
             this.velocity += 0.02;  
             this.changeDirectionVector()
           }
@@ -75,7 +74,7 @@ class Player {
        moveDown(){
               if (this.y < 550){
               direction = "down"
-              this.y += 2 * this.velocity; 
+              this.y += 1 * this.velocity; 
               this.velocity += 0.02;  
               this.changeDirectionVector()
         }

@@ -1,6 +1,6 @@
 let score = 0;
-let level = 3
-// let crashed = 0
+let level = 1
+let dead = false
 // let gameEnd = false;
 // let shing;
 let player;
@@ -14,21 +14,51 @@ class Game {
     this.player = new Player();
     this.rights = new Rights();
     this.provision = new Provision()
+    this.level = level;
     this.rightsInAction = [];
     this.rightsCollection = [];
     this.rightsUrls = []
     this.indexForURLs = 0
     this.urlsOnly = []
-    this.iconUrls = ["assets/sex.png","assets/race.png","assets/color.png","assets/language.png","assets/religion.png","assets/minority.jpg", "assets/birth.png"]
+    this.iconUrls = ["assets/sex.png","assets/race.png","assets/color.png","assets/language.png","assets/religion.png","assets/politicalOpinion.png","assets/minority.png", "assets/nationality.png", "assets/birth.png","assets/other.png"]
    this.icons = []
    this.iconIndex = 0
-   this.provisions = []
+  //  this.provisions = []
     this.case = new Case()
     this.cases = []
-    
-    // this.shopper = new Shopper();
-    // this.shoppers = []
-
+    // newwwwww
+this.provisions = []
+this.provisionURLs = ["assets/provision.png", "assets/12.png"]
+this.xs = []
+this.ys = []
+this.url1 = "assets/provision.png"
+this.img1;
+this.x1 = Math.floor(Math.random() * (1100 - 180 + 1) + 180); 
+this.y1 = Math.floor(Math.random() * (600 - 0 + 1) + 0);
+this.collided1 = false
+this.x2 = Math.floor(Math.random() * (1100 - 180 + 1) + 180); 
+this.y2 = Math.floor(Math.random() * (600 - 0 + 1) + 0);
+this.url2 = "assets/provision.png"
+this.img2;
+this.collided2 = false
+this.collided3 = false
+this.x3 = Math.floor(Math.random() * (1100 - 180 + 1) + 180); 
+this.y3 = Math.floor(Math.random() * (600 - 0 + 1) + 0);
+this.collided4 = false
+this.x4 = Math.floor(Math.random() * (1100 - 180 + 1) + 180); 
+this.y4 = Math.floor(Math.random() * (600 - 0 + 1) + 0);
+this.collided5 = false
+this.x5 = Math.floor(Math.random() * (1100 - 180 + 1) + 180); 
+this.y5 = Math.floor(Math.random() * (600 - 0 + 1) + 0);
+this.collided6 = false
+this.x6 = Math.floor(Math.random() * (1100 - 180 + 1) + 180); 
+this.y6 = Math.floor(Math.random() * (600 - 0 + 1) + 0);
+this.collided7 = false
+this.x7 = Math.floor(Math.random() * (1100 - 180 + 1) + 180); 
+this.y7 = Math.floor(Math.random() * (600 - 0 + 1) + 0);
+this.collided8 = false
+this.x8 = Math.floor(Math.random() * (1100 - 180 + 1) + 180); 
+this.y8 = Math.floor(Math.random() * (600 - 0 + 1) + 0);
   }
 
 
@@ -40,13 +70,16 @@ class Game {
     this.background.preload();
     this.player.preload();
    this.provision.preload()
-   
-
-    // this.icon = loadImage("assets/color.png")
     // shing = loadSound("assets/shing2.wav")
-// console.log('preload game')
-  }
 
+    for (var i=0; i<8; i++){
+      // this.provisions[i] = loadImage(this.provisionURLs[i])
+      this.ys[i] = Math.floor(Math.random() * (600 - 200 + 1) + 100);
+        this.xs[i] =  Math.floor(Math.random() * (900 - 300 + 1) + 100); 
+    }
+
+    
+  }
 
 // ~~~~~~~~ SETUP ~~~~~~~~~~~~~
   setup() {
@@ -54,7 +87,7 @@ class Game {
     this.provision.setup()
 
 
-    for (var i = 0; i < 7; i++){
+    for (var i = 0; i < 10; i++){
       this.icons[i] = loadImage(this.iconUrls[i]);
       // console.log(this.iconUrls[i])
     }
@@ -81,22 +114,21 @@ isRightsCollision(rights, player) {
   return true;
 }
 
-
-
-
-
-
-isProvisionCollision(provision, player) {
-  if (player.x + player.width < provision.x || provision.x + provision.width < player.x){
+isProvisionCollision (x, y, player){
+  if ((player.x + player.width < x) || (x + 100 < player.x)){
     return false
   }
-  if (player.y > provision.y + provision.height ||
-    provision.y > player.y + player.height
+  if ((player.y > y + 100) ||
+    (y > player.y + player.height)
   ) {
   return false;
   }
   return true;
 }
+
+
+
+
 
 
 changeIcon(){
@@ -109,7 +141,7 @@ changeIcon(){
   draw() {
     this.background.draw();
     this.player.draw();
-    this.provision.draw()
+    // this.provision.draw()
     function renderScore(){
 push();
 noStroke();
@@ -136,6 +168,7 @@ function renderCollection(){
   renderCollection()
 
 
+
 // // A Wild Right appears!
 if (frameCount % 60 === 0) {
   this.rightsInAction.push(new Rights());
@@ -144,11 +177,6 @@ this.rightsInAction.forEach(
 (rights, index) => {
 if (!rights.img) rights.preload();
   rights.draw();
-
-// // removes Rights when off screen
-// if (this.rights.x + this.rights.width <= 0){
-// this.rightsCollection.splice(index, 1)
-// }
 
 // remove Rights every four seconds if more than 3 showing
 // to do: fix this logic so it makes more sense
@@ -191,8 +219,13 @@ if (this.rightsCollection.length > 0){
   for (var i=0; i<this.rightsCollection.length; i++){
 
 let ind = this.iconUrls.indexOf(this.rightsCollection[i].imgURL)
-image(this.icons[ind], 55, (100 + ( this.iconUrls.indexOf(this.rightsCollection[i].imgURL) * 80)), 50, 50)
+image(this.icons[ind], 25, (105 + ( this.iconUrls.indexOf(this.rightsCollection[i].imgURL) * 60)), 40, 40)
+    push()
+    fill("darkGreen")
+    text(this.rightsCollection[i].name, 85, (105 + (this.iconUrls.indexOf(this.rightsCollection[i].imgURL) * 60)+25))
+    pop()
 }
+
 }
 
 if (this.isRightsCollision(rights, this.player)){
@@ -200,27 +233,8 @@ score+=5
 // shing.play();
 // console.log(score)
 }
-
-
 })
 
-
-
-  // render provisions not level 1
-  if (level > 1){
-
-    // console.log(isProvisionCollision(this.provision))
-  }
-  
-  
-// console.log(this.provision.provisions)
-// console.log("THIS>DPROVISIO", this.provision.urls)
-
-//           if (this.isProvisionCollision(provision, this.player)){
-//   this.provisions.splice(index, 1);
-//   console.log("IHIST")
-// }
-//       })
 
 
 // ~~~~~~~~CASE LEVEL 3~~~~~~~~~~
@@ -228,7 +242,7 @@ score+=5
     if (frameCount > 180 && frameCount % 180 === 0){
       this.cases.push(new Case())
     }
-console.log('THIS. CASE', this.cases)
+
        // A new case appears! draw new case
     this.cases.forEach((c, index) => {
         c.draw();
@@ -239,7 +253,7 @@ console.log('THIS. CASE', this.cases)
     }
 
     function isCaseCollision(c, player){
-      if (player.x + player.width < c.x ||c.x + 200 < player.x){
+      if (player.x + player.width < c.x ||c.x + c.width < player.x){
         return false;
       }
       if (player.y > c.y + 24 || c.y > player.y + player.height){
@@ -250,10 +264,10 @@ console.log('THIS. CASE', this.cases)
 
 // call the funciton
 if (isCaseCollision(c, this.player)){
-  if (c.category === "+"){
+  if (c.category == "+"){
     score +=3
   } else  {
-    score -=10
+    score -=100
   }
   this.cases.splice(index, 1)
 }
@@ -261,7 +275,110 @@ if (isCaseCollision(c, this.player)){
 }
 //~~~~~~~~~~~ END CASE~~~~~~~~~
 
+  // ~~~~~~~START PROVISIONS AB LEVEL 2~~~~~~~~~~~
+  // RIP developer dreams
+  if (level > 1){
+    if (!this.isProvisionCollision(this.x1, this.y1, this.player)){
+      if (this.collided1 == false){
+        
+        push()
+        fill("blue")
+        textSize(28)
+        text("Expression", this.x1, this.y1)
+        pop()
+      }
+      // return;
+    } else {
+      this.collided1 = true;
+      // score +=3
+    }
+    
+    if (!this.isProvisionCollision(this.x2, this.y2, this.player)){
+      if (this.collided2 == false){
+        push()
+        fill("blue")
+        textSize(28)
+        text("Marriage", this.x2, this.y2)
+        pop()
+      }
+      
+    } else {
+      this.collided2 = true;
+      // score+=3
+    }
+    if (!this.isProvisionCollision(this.x3, this.y3, this.player)){
+      if (this.collided3 == false){
+        push()
+        fill("blue")
+        textSize(28)
+        text("No torture", this.x3, this.y3)
+        pop()
+      }
+      
+    } else {
+      this.collided3 = true;
+      // score+=3
+    }
+   
+    if (!this.isProvisionCollision(this.x4, this.y4, this.player)){
+      if (this.collided4 == false){
+        push()
+        fill("blue")
+        textSize(28)
+        text("Privacy/family", this.x4, this.y4)
+        pop()
+      }
+      
+    } else {
+      this.collided4 = true;
+      // score+=3
+    }
 
+    if (!this.isProvisionCollision(this.x5, this.y5, this.player)){
+      if (this.collided5 == false){
+        push()
+        fill("blue")
+        textSize(28)
+        text("Assembly", this.x5, this.y5)
+        pop()
+      }
+      
+    } else {
+      this.collided5 = true;
+      // score+=3
+    }
+
+    if (!this.isProvisionCollision(this.x6, this.y6, this.player)){
+      if (this.collided6 == false){
+        push()
+        fill("blue")
+        textSize(28)
+        text("Life", this.x6, this.y6)
+        pop()
+      }
+      
+    } else {
+      this.collided6 = true;
+      // score+=3
+    }
+
+
+    if (!this.isProvisionCollision(this.x7, this.y7, this.player)){
+      if (this.collided7 == false){
+        push()
+        fill("blue")
+        textSize(28)
+        text("Liberty/security", this.x7, this.y7)
+        pop()
+      }
+      
+    } else {
+      this.collided7 = true;
+      // score+=3
+    }
+
+  }
+// ~~~~~~~~~~~~END PROVISION DRAW ~~~~~~~~~~~~
 
 // if (crashed === 1){
 //   gameEnd = true
@@ -308,10 +425,36 @@ if (
         this.iconIndex = 0
         let iconInCollection = ""
         this.cases = []
+        this.provisions = []
         level ++
         this.preload()
         this.setup()
         this.draw()
+        this.collided1 = false;
+        this.collided2 = false;
+        this.collided3 = false;
+        this.collided4 = false;
+        this.collided5 = false;
+        this.collided6 = false;
+        this.collided7 = false;
+        this.collided8 = false;
+        this.x1;
+        this.y1;
+        this.x2;
+        this.y2;
+        this.x3;
+        this.y3;
+        this.x4
+        this.y4
+        this.x5
+        this.y5
+        this.x6
+        this.y6
+        this.x7
+        this.y7
+        this.x8
+        this.y8
+        this.level ++
       // }
       }
 
